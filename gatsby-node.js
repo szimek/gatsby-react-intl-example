@@ -27,6 +27,7 @@ exports.createPages = async ({ boundActionCreators, graphql }) => {
     createPage({
       path: `/${locale}/${slug}`,
       component: path.resolve(`src/templates/PostPage.js`),
+      layout: locale,
       context: {
         locale,
         slug,
