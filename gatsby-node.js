@@ -1,4 +1,5 @@
 const path = require('path');
+const _ = require('lodash');
 
 exports.createPages = async ({ boundActionCreators, graphql }) => {
   const { createPage } = boundActionCreators;
@@ -21,6 +22,19 @@ exports.createPages = async ({ boundActionCreators, graphql }) => {
     }
   }`);
 
+  // Render index page for each locale
+  _(posts.edges).groupBy('node.frontmatter.locale').forOwn((postsInLocale, locale) => {
+    createPage({
+      path: `/${locale}`,
+      component: path.resolve(`src/templates/IndexPage.js`),
+      layout: locale,
+      context: {
+        locale,
+      },
+    })
+  })
+
+  // Render all posts
   posts.edges.forEach(({ node }) => {
     const { locale, slug } = node.frontmatter;
 
